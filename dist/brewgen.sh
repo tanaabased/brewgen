@@ -48,7 +48,7 @@ tty_tp="$(tty_escape '38;2;0;200;138')"
 tty_ts="$(tty_escape '38;2;219;39;119')"
 
 # Keep a single top-level assignment so release automation can stamp the entrypoint in place.
-SCRIPT_VERSION="v1.0.0-beta.1"
+SCRIPT_VERSION="v1.0.0-beta.2"
 SCRIPT_NAME_SOURCE="${BASH_SOURCE[0]:-${0}}"
 SCRIPT_NAME="${SCRIPT_NAME_SOURCE##*/}"
 
