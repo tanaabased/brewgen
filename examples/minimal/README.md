@@ -17,8 +17,10 @@ brewgen.sh --package-type tap --brewfile .tmp/Brewfile.generated --force > .tmp/
 ```bash
 # should report successful generation
 grep -F 'brewfile generation complete' .tmp/run.log
+
 # should write the requested Brewfile
 test -s .tmp/Brewfile.generated
+
 # should include at least one tap entry
 grep -E '^tap "' .tmp/Brewfile.generated
 ```

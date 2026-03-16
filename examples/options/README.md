@@ -15,6 +15,7 @@ sed -n '1p' .tmp/formulae > .tmp/exclude-name
 sed -n '2p' .tmp/formulae > .tmp/include-name
 test -s .tmp/exclude-name
 test -s .tmp/include-name
+
 # should generate a filtered brew only Brewfile
 exclude_name="$(cat .tmp/exclude-name)"
 brewgen.sh \
@@ -29,16 +30,21 @@ brewgen.sh \
 ```bash
 # should report successful generation
 grep -F 'brewfile generation complete' .tmp/run.log
+
 # should write the requested Brewfile
 test -s .tmp/out/Brewfile.generated
+
 # should create parent directories for the output path
 test -d .tmp/out
+
 # should include only brew entries
 grep -Eq '^brew "' .tmp/out/Brewfile.generated
 ! grep -Eq '^(tap|cask|mas|vscode|go|cargo|uv|flatpak) "' .tmp/out/Brewfile.generated
+
 # should exclude the requested package
 excluded="$(cat .tmp/exclude-name)"
 ! grep -F "brew \"$excluded\"" .tmp/out/Brewfile.generated
+
 # should keep other brew packages
 included="$(cat .tmp/include-name)"
 grep -F "brew \"$included\"" .tmp/out/Brewfile.generated
