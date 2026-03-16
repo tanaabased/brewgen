@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /
+Sitemap: https://script.tanaab.sh/sitemap.xml
+Host: https://script.tanaab.sh
+Allow: /script.sh
+Allow: /script.ps1
+Allow: /sitemap.xml
