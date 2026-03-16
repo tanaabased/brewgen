@@ -1,7 +1,7 @@
 {
   "name": "@tanaabased/brewgen",
   "description": "Tanaab based Brewfile generation",
-  "version": "0.0.0",
+  "version": "1.0.0-beta.1",
   "author": "Mike Pirog @pirog",
   "license": "MIT",
   "private": true,
