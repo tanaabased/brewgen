@@ -10,7 +10,7 @@ env:
   STAMPED_VERSION: v9.9.9-ci.${{ github.event.pull_request.head.sha }}
 
 jobs:
-  release-bash:
+  release:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
@@ -34,46 +34,11 @@ jobs:
           commands: |
             bun run lint
             bun run build
-            version-injector dist/script.sh --style sh --version "${{ env.STAMPED_VERSION }}"
-            version-injector dist/script.ps1 --style ps1 --version "${{ env.STAMPED_VERSION }}"
+            version-injector dist/brewgen.sh --style sh --version "${{ env.STAMPED_VERSION }}"
 
       - name: Verify stamped release entrypoint
         shell: bash
         run: |
-          actual="$(bash ./dist/script.sh --version)"
+          actual="$(bash ./dist/brewgen.sh --version)"
           printf 'actual=%s\n' "$actual"
           test "$actual" = "${{ env.STAMPED_VERSION }}"
-
-  release-powershell:
-    runs-on: windows-2025
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-
-      - name: Install Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version-file: .bun-version
-
-      - name: Install dependencies
-        run: bun install --frozen-lockfile --ignore-scripts
-
-      - name: Prepare release-shaped build
-        uses: tanaabased/prepare-release-action@v1
-        with:
-          version: dev
-          sync: false
-          commands: |
-            bun run build
-            version-injector dist/script.sh --style sh --version "${{ env.STAMPED_VERSION }}"
-            version-injector dist/script.ps1 --style ps1 --version "${{ env.STAMPED_VERSION }}"
-
-      - name: Verify stamped PowerShell release entrypoint
-        shell: pwsh
-        run: |
-          $version = & ./dist/script.ps1 -Version
-          if ($version -ne "${{ env.STAMPED_VERSION }}") {
-            throw "expected version ${{ env.STAMPED_VERSION }}, got $version"
-          }

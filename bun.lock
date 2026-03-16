@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "template-netscript",
+      "name": "brewgen",
       "devDependencies": {
         "@eslint/js": "^10.0.1",
         "@lando/leia": "^1.0.0-beta.4",

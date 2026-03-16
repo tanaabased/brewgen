@@ -1,4 +1,4 @@
-name: Bash Examples Tests
+name: Examples Tests
 
 on:
   pull_request:
@@ -17,11 +17,12 @@ jobs:
       fail-fast: false
       matrix:
         runs-on:
-          - ubuntu-24.04
           - macos-26
         example:
-          - cli-contract-bash
-          - minimal-bash
+          - cli-contract
+          - envvars
+          - minimal
+          - options
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -41,8 +42,7 @@ jobs:
           sync: false
           commands: |
             bun run build
-            version-injector dist/script.sh --style sh --version "${{ env.STAMPED_VERSION }}"
-            version-injector dist/script.ps1 --style ps1 --version "${{ env.STAMPED_VERSION }}"
+            version-injector dist/brewgen.sh --style sh --version "${{ env.STAMPED_VERSION }}"
 
       - name: Put prepared script on PATH
         shell: bash
@@ -54,4 +54,4 @@ jobs:
           TMPDIR: ${{ github.workspace }}/examples/${{ matrix.example }}/.tmp
         run: |
           mkdir -p "$TMPDIR"
-          bun run leia "examples/${{ matrix.example }}/README.md" -c "Destroy tests" --stdin
+          bun run leia "examples/${{ matrix.example }}/README.md" --stdin
