@@ -1,7 +1,7 @@
 # Brewgen Options Example
 
-This example exercises `brewgen.sh` with CLI options only. It discovers installed formulae from
-the current Homebrew state, generates a Brewfile in a nested output directory, and verifies the
+This example exercises `brewgen` with CLI options only. It discovers installed formulae from the
+current Homebrew state, generates a Brewfile in a nested output directory, and verifies the
 resulting file content.
 
 ## Setup
@@ -9,7 +9,7 @@ resulting file content.
 ```bash
 # should discover installed brew packages for the example
 mkdir -p .tmp/out
-brewgen.sh --package-type brew --brewfile .tmp/discovery.Brewfile --force > .tmp/discovery.log 2>&1
+brewgen --package-type brew --brewfile .tmp/discovery.Brewfile --force > .tmp/discovery.log 2>&1
 grep -E '^brew "' .tmp/discovery.Brewfile | cut -d'"' -f2 > .tmp/formulae
 sed -n '1p' .tmp/formulae > .tmp/exclude-name
 sed -n '2p' .tmp/formulae > .tmp/include-name
@@ -18,7 +18,7 @@ test -s .tmp/include-name
 
 # should generate a filtered brew only Brewfile
 exclude_name="$(cat .tmp/exclude-name)"
-brewgen.sh \
+brewgen \
   --package-type brew \
   --exclude "$exclude_name" \
   --brewfile .tmp/out/Brewfile.generated \
