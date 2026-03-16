@@ -1,15 +1,15 @@
 # Brewgen Environment Variables Example
 
-This example exercises `brewgen.sh` with environment variables only. It discovers installed
-formulae from the current Homebrew state, generates a Brewfile in a nested output directory, and
-verifies the resulting file content.
+This example exercises `brewgen` with environment variables only. It discovers installed formulae
+from the current Homebrew state, generates a Brewfile in a nested output directory, and verifies
+the resulting file content.
 
 ## Setup
 
 ```bash
 # should discover installed brew packages for the example
 mkdir -p .tmp/out
-brewgen.sh --package-type brew --brewfile .tmp/discovery.Brewfile --force > .tmp/discovery.log 2>&1
+brewgen --package-type brew --brewfile .tmp/discovery.Brewfile --force > .tmp/discovery.log 2>&1
 grep -E '^brew "' .tmp/discovery.Brewfile | cut -d'"' -f2 > .tmp/formulae
 sed -n '1p' .tmp/formulae > .tmp/exclude-name
 sed -n '2p' .tmp/formulae > .tmp/include-name
@@ -22,7 +22,7 @@ TANAAB_PACKAGE_TYPES=brew \
 TANAAB_EXCLUDE="$exclude_name" \
 TANAAB_BREWFILE=.tmp/out/Brewfile.generated \
 TANAAB_FORCE=1 \
-  brewgen.sh > .tmp/run.log 2>&1
+  brewgen > .tmp/run.log 2>&1
 ```
 
 ## Testing

@@ -49,6 +49,14 @@ tty_ts="$(tty_escape '38;2;219;39;119')"
 
 # Keep a single top-level assignment so release automation can stamp the entrypoint in place.
 SCRIPT_VERSION="${SCRIPT_VERSION:-$(git describe --tags --always --abbrev=1 2>/dev/null || printf '%s' '0.0.0')}"
+SCRIPT_NAME_SOURCE="${BASH_SOURCE[0]:-${0}}"
+SCRIPT_NAME="${SCRIPT_NAME_SOURCE##*/}"
+
+case "${SCRIPT_NAME}" in
+  '' | stdin | bash | -bash | sh | -sh)
+    SCRIPT_NAME="brewgen.sh"
+    ;;
+esac
 
 if [[ -n "${POSIXLY_CORRECT+1}" ]]; then
   abort "bash must not run in POSIX mode. please unset ${tty_bold}POSIXLY_CORRECT${tty_reset} and try again."
@@ -172,7 +180,7 @@ usage() {
   excludes_display="${excludes_display:-none}"
 
   cat <<EOS
-Usage: ${tty_bold}brewgen.sh${tty_reset} ${tty_dim}[options]${tty_reset}
+Usage: ${tty_bold}${SCRIPT_NAME}${tty_reset} ${tty_dim}[options]${tty_reset}
 
 ${tty_tp}Options:${tty_reset}
   --brewfile            writes the Brewfile to this path ${tty_dim}[default: ${BREWFILE}]${tty_reset}
@@ -628,8 +636,8 @@ fi
 
 prepare_output_path "brewfile" "${BREWFILE}"
 
-debug "running brewgen.sh script version: ${SCRIPT_VERSION}"
-debug "raw args brewgen.sh ${ORIGOPTS}"
+debug "running ${SCRIPT_NAME} script version: ${SCRIPT_VERSION}"
+debug "raw args ${SCRIPT_NAME} ${ORIGOPTS}"
 debug raw BREW="${BREW}"
 debug raw BREWFILE="${BREWFILE}"
 debug raw "${tty_bold}DEBUG${tty_reset}=${DEBUG}"
