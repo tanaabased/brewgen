@@ -10,8 +10,8 @@ env:
   STAMPED_VERSION: v9.9.9-ci.${{ github.event.pull_request.head.sha }}
 
 jobs:
-  release-macos:
-    runs-on: macos-26
+  release:
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v6

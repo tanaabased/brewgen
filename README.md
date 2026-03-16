@@ -43,8 +43,9 @@ If you are working from a local checkout instead of a hosted URL, replace `brewg
 `brewgen.sh` expects a working Homebrew installation and `brew bundle` support on the current
 machine.
 
-The [`examples/`](/Users/pirog/tanaab/brewgen/examples) directory contains Leia-tested usage
-examples that run on every pull request.
+The [`examples/`](/Users/pirog/tanaab/brewgen/examples) directory contains Leia-backed usage
+scenarios that run on every pull request in CI and are intended for runner validation rather than
+local execution.
 
 ## Common Patterns
 
@@ -110,8 +111,7 @@ bun run lint
 bun run build
 ```
 
-The `examples/` directory exists as executable scenario coverage, and those scenarios are exercised
-in CI with Leia on macOS against the prepared `dist/` artifact.
+The examples run in CI with Leia against the prepared `dist/` artifact.
 
 ## Issues, Questions and Support
 
