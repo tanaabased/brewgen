@@ -1,16 +1,16 @@
 {
-  "name": "@tanaabased/template-netscript",
-  "description": "Minimal hosted Bash and PowerShell script starter template for macOS, Linux, and Windows.",
-  "version": "1.0.0-beta.1",
+  "name": "@tanaabased/brewgen",
+  "description": "Tanaab based Brewfile generation",
+  "version": "0.0.0",
   "author": "Mike Pirog @pirog",
   "license": "MIT",
   "private": true,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tanaabased/template-netscript.git"
+    "url": "git+https://github.com/tanaabased/brewgen.git"
   },
   "bugs": {
-    "url": "https://github.com/tanaabased/template-netscript/issues"
+    "url": "https://github.com/tanaabased/brewgen/issues"
   },
   "type": "module",
   "packageManager": "bun@1.3.4",
@@ -29,7 +29,7 @@
   "scripts": {
     "build": "bun ./scripts/build-dist.js",
     "lint:eslint": "eslint .",
-    "lint:shellcheck": "shellcheck -s bash script.sh",
+    "lint:shellcheck": "shellcheck -s bash brewgen.sh",
     "format:check": "prettier --check .",
     "format:write": "prettier --write .",
     "lint": "bun run lint:eslint && bun run format:check && bun run lint:shellcheck"
