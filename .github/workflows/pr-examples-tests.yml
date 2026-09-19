@@ -11,7 +11,7 @@ env:
 
 jobs:
   examples:
-    name: ${{ matrix.runs-on }} / ${{ matrix.example }}
+    name: ${{ matrix.example }} (${{ matrix.runs-on }})
     runs-on: ${{ matrix.runs-on }}
     strategy:
       fail-fast: false
@@ -19,11 +19,10 @@ jobs:
         runs-on:
           - macos-26
         example:
-          - cli-contract
-          - envvars
+          - inputs
+          - defaults
+          - brewfiles
           - legacy
-          - minimal
-          - options
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -51,4 +50,4 @@ jobs:
           TMPDIR: ${{ github.workspace }}/examples/${{ matrix.example }}/.tmp
         run: |
           mkdir -p "$TMPDIR"
-          bun run leia "examples/${{ matrix.example }}/README.md" --no-stdin
+          bun run leia "examples/${{ matrix.example }}/README.md" --no-stdin --retry 0
