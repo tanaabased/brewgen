@@ -1,6 +1,10 @@
 # `brewgen`
 
 <p align="center">
+  <img src="./assets/brewgen.png" alt="brewgen" width="180" />
+</p>
+
+<p align="center">
   <a href="https://github.com/tanaabased/brewgen/releases"><img src="https://img.shields.io/github/v/release/tanaabased/brewgen?include_prereleases&sort=semver" alt="Latest release" /></a>
   <img src="https://img.shields.io/badge/macOS-Bash-111827" alt="macOS Bash" />
 </p>
@@ -25,17 +29,17 @@ At a high level, `brewgen`:
 Generate the default Brewfile from the hosted script:
 
 ```sh
-curl -fsSL https://brewgen.tanaab.sh/brewgen.sh | bash
+/bin/bash -c "$(curl -fsSL https://brewgen.tanaab.sh/brewgen.sh)" brewgen
 ```
 
 Set inputs inline when you want to make the generated output explicit:
 
 ```sh
-curl -fsSL https://brewgen.tanaab.sh/brewgen.sh | \
-  BREWGEN_PACKAGE_TYPES="tap,brew" \
-  BREWGEN_BREWFILE="./Brewfile.work" \
-  BREWGEN_FORCE=1 \
-  bash
+/bin/bash -c "$(curl -fsSL https://brewgen.tanaab.sh/brewgen.sh)" brewgen \
+  --package-type tap \
+  --package-type brew \
+  --brewfile ./Brewfile.work \
+  --force
 ```
 
 ## Usage
