@@ -62,11 +62,27 @@ if [[ -n "${POSIXLY_CORRECT+1}" ]]; then
   abort "bash must not run in POSIX mode. please unset ${tty_bold}POSIXLY_CORRECT${tty_reset} and try again."
 fi
 
-BREWFILE="${TANAAB_BREWFILE:-Brewfile}"
-DEBUG="${TANAAB_DEBUG:-${DEBUG:-${RUNNER_DEBUG:-}}}"
-EXCLUDES_CSV="${TANAAB_EXCLUDE:-}"
-FORCE="${TANAAB_FORCE:-}"
-PACKAGE_TYPES_CSV="${TANAAB_PACKAGE_TYPES:-tap,cask,brew}"
+env_value() {
+  local preferred_name="$1"
+  local legacy_name="$2"
+  local fallback="${3-}"
+  local preferred_value="${!preferred_name-}"
+  local legacy_value="${!legacy_name-}"
+
+  if [[ -n "${preferred_value}" ]]; then
+    printf "%s" "${preferred_value}"
+  elif [[ -n "${legacy_value}" ]]; then
+    printf "%s" "${legacy_value}"
+  else
+    printf "%s" "${fallback}"
+  fi
+}
+
+BREWFILE="$(env_value BREWGEN_BREWFILE TANAAB_BREWFILE Brewfile)"
+DEBUG="$(env_value BREWGEN_DEBUG TANAAB_DEBUG "${DEBUG:-${RUNNER_DEBUG:-}}")"
+EXCLUDES_CSV="$(env_value BREWGEN_EXCLUDE TANAAB_EXCLUDE)"
+FORCE="$(env_value BREWGEN_FORCE TANAAB_FORCE)"
+PACKAGE_TYPES_CSV="$(env_value BREWGEN_PACKAGE_TYPES TANAAB_PACKAGE_TYPES tap,cask,brew)"
 
 ORIGOPTS="$*"
 
@@ -192,11 +208,11 @@ ${tty_tp}Options:${tty_reset}
   -h, --help            displays this help message
 
 ${tty_tp}Environment Variables:${tty_reset}
-  TANAAB_BREWFILE       brewfile output path
-  TANAAB_EXCLUDE        comma-separated package names to exclude
-  TANAAB_FORCE          set to a truthy value to overwrite existing files
-  TANAAB_PACKAGE_TYPES  comma-separated package types to dump
-  TANAAB_DEBUG          set to a truthy value to show debug messages
+  BREWGEN_BREWFILE       brewfile output path
+  BREWGEN_EXCLUDE        comma-separated package names to exclude
+  BREWGEN_FORCE          set to a truthy value to overwrite existing files
+  BREWGEN_PACKAGE_TYPES  comma-separated package types to dump
+  BREWGEN_DEBUG          set to a truthy value to show debug messages
 
 EOS
   if [[ "${1:-0}" != "noexit" ]]; then

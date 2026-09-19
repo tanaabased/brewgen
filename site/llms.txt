@@ -1,0 +1,20 @@
+# `brewgen`
+
+> `brewgen` is a hosted Bash script that generates a Brewfile from the current Homebrew state.
+
+`brewgen` runs on macOS with Homebrew and `brew bundle` available. By default it writes a
+`Brewfile` in the current directory containing tap, cask, and formula entries. Callers can select
+package types, exclude exact package names, choose an output path, and permit overwriting an
+existing file.
+
+The primary entrypoint is `https://brewgen.tanaab.sh/brewgen.sh`. Use `--help` for the complete
+command contract. Public environment variables use the `BREWGEN_` namespace; CLI options override
+environment values, which override built-in defaults.
+
+## Primary Resources
+
+- [Hosted Brewgen script](https://brewgen.tanaab.sh/brewgen.sh): Generated Bash entrypoint.
+- [README source](https://raw.githubusercontent.com/tanaabased/brewgen/main/README.md): Quickstart, usage, and configuration.
+- [GitHub repository](https://github.com/tanaabased/brewgen): Source, executable examples, and workflows.
+- [Releases](https://github.com/tanaabased/brewgen/releases): Published hosted-script versions.
+- [Issues](https://github.com/tanaabased/brewgen/issues): Bug reports and feature requests.
