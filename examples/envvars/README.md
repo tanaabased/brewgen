@@ -18,10 +18,10 @@ test -s .tmp/include-name
 
 # should generate a filtered brew only Brewfile
 exclude_name="$(cat .tmp/exclude-name)"
-TANAAB_PACKAGE_TYPES=brew \
-TANAAB_EXCLUDE="$exclude_name" \
-TANAAB_BREWFILE=.tmp/out/Brewfile.generated \
-TANAAB_FORCE=1 \
+BREWGEN_PACKAGE_TYPES=brew \
+BREWGEN_EXCLUDE="$exclude_name" \
+BREWGEN_BREWFILE=.tmp/out/Brewfile.generated \
+BREWGEN_FORCE=1 \
   brewgen > .tmp/run.log 2>&1
 ```
 

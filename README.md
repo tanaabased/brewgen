@@ -34,7 +34,7 @@ brewgen.sh --version
 brewgen.sh --brewfile ./Brewfile.work --force
 brewgen.sh --package-type tap --package-type brew
 brewgen.sh --exclude codex --exclude visual-studio-code
-TANAAB_DEBUG=1 brewgen.sh --package-type cask
+BREWGEN_DEBUG=1 brewgen.sh --package-type cask
 ```
 
 If you are working from a local checkout instead of a hosted URL, replace `brewgen.sh` with
@@ -80,11 +80,11 @@ CLI options override environment variables, and environment variables override b
 
 ## Environment Variables
 
-- `TANAAB_BREWFILE` sets the output Brewfile path.
-- `TANAAB_PACKAGE_TYPES` sets a comma-separated default list of package types.
-- `TANAAB_EXCLUDE` sets a comma-separated default list of package names to exclude.
-- `TANAAB_FORCE` enables overwrite behavior when set to a truthy value.
-- `TANAAB_DEBUG` enables debug logging when set to a truthy value.
+- `BREWGEN_BREWFILE` sets the output Brewfile path.
+- `BREWGEN_PACKAGE_TYPES` sets a comma-separated default list of package types.
+- `BREWGEN_EXCLUDE` sets a comma-separated default list of package names to exclude.
+- `BREWGEN_FORCE` enables overwrite behavior when set to a truthy value.
+- `BREWGEN_DEBUG` enables debug logging when set to a truthy value.
 
 ## Advanced
 

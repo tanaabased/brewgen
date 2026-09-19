@@ -20,7 +20,10 @@ brewgen --help | grep -- '--debug'
 brewgen --help | grep -- '--version'
 
 # should show the env-provided brewfile default in help output
-TANAAB_BREWFILE=.tmp/from-env brewgen --help | grep -F -- '.tmp/from-env'
+BREWGEN_BREWFILE=.tmp/from-env brewgen --help | grep -F -- '.tmp/from-env'
+
+# should not document legacy environment variables
+if brewgen --help | grep -F 'TANAAB_'; then exit 1; fi
 
 # should show the invoked command name in usage output
 brewgen --help | grep -E 'Usage: .*brewgen '
