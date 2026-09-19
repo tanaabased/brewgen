@@ -1,95 +1,47 @@
-# brewgen
+# `brewgen`
 
-`brewgen` is the hosted script repo for Tanaab based Brewfile generation. It inspects the current
-Homebrew state and writes a `Brewfile`, with options to limit package types, exclude packages, and
-choose the output path. Under the hood it uses `brew bundle dump` and assembles the selected
-sections into one output file.
+<p align="center">
+  <a href="https://github.com/tanaabased/brewgen/releases"><img src="https://img.shields.io/github/v/release/tanaabased/brewgen?include_prereleases&sort=semver" alt="Latest release" /></a>
+  <img src="https://img.shields.io/badge/macOS-Bash-111827" alt="macOS Bash" />
+</p>
 
-> Runtime support: Bash on macOS.
+`brewgen` is a hosted Bash script that turns the current Homebrew state into a focused Brewfile.
+Select package types, exclude exact packages, choose an output path, and keep the result under
+version control without hauling a full machine bootstrapper into the room.
+
+> Supports Bash on macOS with Homebrew and `brew bundle` available. CI covers macOS 26.
+
+## Overview
+
+At a high level, `brewgen`:
+
+- reads installed Homebrew taps, casks, formulae, and supported package-manager sections
+- writes a Brewfile to the current directory or a selected output path
+- filters exact package names and supports one or more selected package types
+- refuses to overwrite an existing Brewfile unless explicitly allowed
 
 ## Quickstart
+
+Generate the default Brewfile from the hosted script:
 
 ```sh
 curl -fsSL https://brewgen.tanaab.sh/brewgen.sh | bash
 ```
 
-## Installation
+Set inputs inline when you want to make the generated output explicit:
 
-`brewgen` is designed around the hosted raw script at `https://brewgen.tanaab.sh/brewgen.sh`.
-
-- The supported runtime is Bash on macOS.
-- The hosted URL serves the generated `dist/brewgen.sh` entrypoint used for release-shaped
-  validation and Netlify publishing.
+```sh
+curl -fsSL https://brewgen.tanaab.sh/brewgen.sh | \
+  BREWGEN_PACKAGE_TYPES="tap,brew" \
+  BREWGEN_BREWFILE="./Brewfile.work" \
+  BREWGEN_FORCE=1 \
+  bash
+```
 
 ## Usage
 
-By default, `brewgen.sh` writes a `Brewfile` in the current directory from the local Homebrew
-state. The default package types are `tap`, `cask`, and `brew`, and the script will refuse to
-overwrite an existing file unless you pass `--force`.
-
-```sh
-brewgen.sh
-brewgen.sh --help
-brewgen.sh --version
-brewgen.sh --brewfile ./Brewfile.work --force
-brewgen.sh --package-type tap --package-type brew
-brewgen.sh --exclude codex --exclude visual-studio-code
-BREWGEN_DEBUG=1 brewgen.sh --package-type cask
-```
-
-If you are working from a local checkout instead of a hosted URL, replace `brewgen.sh` with
-`./brewgen.sh`.
-
-`brewgen.sh` expects a working Homebrew installation and `brew bundle` support on the current
-machine.
-
-The [`examples/`](/Users/pirog/tanaab/brewgen/examples) directory contains Leia-backed usage
-scenarios that run on every pull request in CI and are intended for runner validation rather than
-local execution.
-
-## Common Patterns
-
-```sh
-# write the default Brewfile in the current directory
-brewgen.sh
-
-# write to a different file and allow overwrite
-brewgen.sh --brewfile ./Brewfile.work --force
-
-# generate only taps and formulae
-brewgen.sh --package-type tap --package-type brew
-
-# exclude specific packages from the final output
-brewgen.sh --exclude codex --exclude visual-studio-code
-```
-
-## Options
-
-- `--brewfile <path>` writes the generated Brewfile to the chosen path. Parent directories are
-  created when needed.
-- `--package-type <type>` limits generation to one or more package types. Supported values are
-  `tap`, `brew` or `formula`, `cask`, `mas`, `vscode`, `go`, `cargo`, `uv`, and `flatpak`. Repeat
-  the flag to include multiple sections.
-- `--exclude <name>` removes matching package names from the final output. Repeat it to exclude
-  multiple packages. Matching is by exact package name in the generated Brewfile entries.
-- `--force` allows overwriting an existing output file.
-- `--debug` turns on debug logging and enables Homebrew debug mode for the current run.
-- `--version` and `--help` print metadata and usage.
-
-CLI options override environment variables, and environment variables override built-in defaults.
-
-## Environment Variables
-
-- `BREWGEN_BREWFILE` sets the output Brewfile path.
-- `BREWGEN_PACKAGE_TYPES` sets a comma-separated default list of package types.
-- `BREWGEN_EXCLUDE` sets a comma-separated default list of package names to exclude.
-- `BREWGEN_FORCE` enables overwrite behavior when set to a truthy value.
-- `BREWGEN_DEBUG` enables debug logging when set to a truthy value.
-
-## Advanced
-
-If you want a reusable local command instead of piping the hosted script every time, install it
-into a directory that is already in your `PATH` or one you manage yourself.
+For repeated use, install the hosted script as a local command in a directory you manage on
+`PATH`:
 
 ```sh
 mkdir -p "$HOME/.local/bin"
@@ -97,21 +49,44 @@ curl -fsSL https://brewgen.tanaab.sh/brewgen.sh -o "$HOME/.local/bin/brewgen"
 chmod +x "$HOME/.local/bin/brewgen"
 
 brewgen --help
-brewgen --version
 ```
+
+Run it with flags when you want to keep the selected behavior visible:
+
+```sh
+brewgen --brewfile ./Brewfile.work --force
+brewgen --package-type tap --package-type brew
+brewgen --exclude codex --exclude visual-studio-code
+BREWGEN_DEBUG=1 brewgen --package-type cask
+```
+
+Common inputs:
+
+| Option           | Environment variable    | Description                                                                       |
+| ---------------- | ----------------------- | --------------------------------------------------------------------------------- |
+| `--brewfile`     | `BREWGEN_BREWFILE`      | Output Brewfile path.                                                             |
+| `--package-type` | `BREWGEN_PACKAGE_TYPES` | Comma-separated default package types; repeat the option to select more than one. |
+| `--exclude`      | `BREWGEN_EXCLUDE`       | Comma-separated exact package names to omit.                                      |
+| `--force`        | `BREWGEN_FORCE`         | Allow an existing output file to be overwritten.                                  |
+| `--debug`        | `BREWGEN_DEBUG`         | Emit diagnostic output.                                                           |
+
+Supported package types are `tap`, `brew` (or `formula`), `cask`, `mas`, `vscode`, `go`, `cargo`,
+`uv`, and `flatpak`. CLI options override environment values, which override built-in defaults.
+Run `brewgen --help` for the complete current contract.
 
 ## Development
 
-`brewgen` uses Bun for repo-local tooling and treats `dist/` as a tracked, Netlify-ready release
-surface.
+This repository uses Bun for tooling and publishes a Netlify-ready `dist/` directory:
 
 ```sh
+git clone https://github.com/tanaabased/brewgen.git
+cd brewgen
 bun install
 bun run lint
-bun run build
 ```
 
-The examples run in CI with Leia against the prepared `dist/` artifact.
+`bun run build` and the Leia examples are CI-owned by default: the build regenerates tracked
+distribution files, and examples exercise Homebrew on fresh macOS runners.
 
 ## Issues, Questions and Support
 
@@ -125,7 +100,7 @@ See [`CHANGELOG.md`](./CHANGELOG.md) for release history and
 
 ## Maintainers
 
-- `@pirog`
+- [@pirog](https://github.com/pirog)
 
 ## Contributors
 
