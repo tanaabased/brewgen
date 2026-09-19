@@ -3,4 +3,5 @@ Disallow: /
 Sitemap: https://brewgen.tanaab.sh/sitemap.xml
 Host: https://brewgen.tanaab.sh
 Allow: /brewgen.sh
+Allow: /llms.txt
 Allow: /sitemap.xml

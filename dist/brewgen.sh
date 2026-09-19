@@ -48,7 +48,7 @@ tty_tp="$(tty_escape '38;2;0;200;138')"
 tty_ts="$(tty_escape '38;2;219;39;119')"
 
 # Keep a single top-level assignment so release automation can stamp the entrypoint in place.
-SCRIPT_VERSION="v1.0.0-beta.2"
+SCRIPT_VERSION="v1.0.0-beta.3"
 SCRIPT_NAME_SOURCE="${BASH_SOURCE[0]:-${0}}"
 SCRIPT_NAME="${SCRIPT_NAME_SOURCE##*/}"
 
@@ -62,11 +62,27 @@ if [[ -n "${POSIXLY_CORRECT+1}" ]]; then
   abort "bash must not run in POSIX mode. please unset ${tty_bold}POSIXLY_CORRECT${tty_reset} and try again."
 fi
 
-BREWFILE="${TANAAB_BREWFILE:-Brewfile}"
-DEBUG="${TANAAB_DEBUG:-${DEBUG:-${RUNNER_DEBUG:-}}}"
-EXCLUDES_CSV="${TANAAB_EXCLUDE:-}"
-FORCE="${TANAAB_FORCE:-}"
-PACKAGE_TYPES_CSV="${TANAAB_PACKAGE_TYPES:-tap,cask,brew}"
+env_value() {
+  local preferred_name="$1"
+  local legacy_name="$2"
+  local fallback="${3-}"
+  local preferred_value="${!preferred_name-}"
+  local legacy_value="${!legacy_name-}"
+
+  if [[ -n "${preferred_value}" ]]; then
+    printf "%s" "${preferred_value}"
+  elif [[ -n "${legacy_value}" ]]; then
+    printf "%s" "${legacy_value}"
+  else
+    printf "%s" "${fallback}"
+  fi
+}
+
+BREWFILE="$(env_value BREWGEN_BREWFILE TANAAB_BREWFILE Brewfile)"
+DEBUG="$(env_value BREWGEN_DEBUG TANAAB_DEBUG "${DEBUG:-${RUNNER_DEBUG:-}}")"
+EXCLUDES_CSV="$(env_value BREWGEN_EXCLUDE TANAAB_EXCLUDE)"
+FORCE="$(env_value BREWGEN_FORCE TANAAB_FORCE)"
+PACKAGE_TYPES_CSV="$(env_value BREWGEN_PACKAGE_TYPES TANAAB_PACKAGE_TYPES tap,cask,brew)"
 
 ORIGOPTS="$*"
 
@@ -192,11 +208,11 @@ ${tty_tp}Options:${tty_reset}
   -h, --help            displays this help message
 
 ${tty_tp}Environment Variables:${tty_reset}
-  TANAAB_BREWFILE       brewfile output path
-  TANAAB_EXCLUDE        comma-separated package names to exclude
-  TANAAB_FORCE          set to a truthy value to overwrite existing files
-  TANAAB_PACKAGE_TYPES  comma-separated package types to dump
-  TANAAB_DEBUG          set to a truthy value to show debug messages
+  BREWGEN_BREWFILE       brewfile output path
+  BREWGEN_EXCLUDE        comma-separated package names to exclude
+  BREWGEN_FORCE          set to a truthy value to overwrite existing files
+  BREWGEN_PACKAGE_TYPES  comma-separated package types to dump
+  BREWGEN_DEBUG          set to a truthy value to show debug messages
 
 EOS
   if [[ "${1:-0}" != "noexit" ]]; then
@@ -546,8 +562,11 @@ generate_brewfile() {
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
+    --brewfile= | --package-type= | --exclude=)
+      abort "${1%%=*} requires a value."
+      ;;
     --brewfile)
-      if [[ $# -lt 2 ]]; then
+      if [[ $# -lt 2 || -z "$2" || "$2" == -* ]]; then
         abort "--brewfile requires a value."
       fi
       BREWFILE="$2"
@@ -558,7 +577,7 @@ while [[ $# -gt 0 ]]; do
       shift
       ;;
     --package-type)
-      if [[ $# -lt 2 ]]; then
+      if [[ $# -lt 2 || -z "$2" || "$2" == -* ]]; then
         abort "--package-type requires a value."
       fi
       append_array_value PACKAGE_TYPES "$2"
@@ -569,7 +588,7 @@ while [[ $# -gt 0 ]]; do
       shift
       ;;
     --exclude)
-      if [[ $# -lt 2 ]]; then
+      if [[ $# -lt 2 || -z "$2" || "$2" == -* ]]; then
         abort "--exclude requires a value."
       fi
       append_array_value EXCLUDES "$2"

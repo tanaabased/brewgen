@@ -1,5 +1,7 @@
 ## {{ UNRELEASED_VERSION }} - [{{ UNRELEASED_DATE }}]({{ UNRELEASED_LINK }})
 
+## v1.0.0-beta.3 - [September 19, 2026](https://github.com/tanaabased/brewgen/releases/tag/v1.0.0-beta.3)
+
 - Added `BREWGEN_*` environment variables with fallback support for legacy `TANAAB_*` names. [#4](https://github.com/tanaabased/brewgen/pull/4)
 - Added hosted `llms.txt` metadata to the distribution, sitemap, and robots rules. [#4](https://github.com/tanaabased/brewgen/pull/4)
 - Added task, bug, and feature issue forms with focused intake questions. [#5](https://github.com/tanaabased/brewgen/pull/5)
