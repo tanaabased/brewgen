@@ -8,7 +8,7 @@ the resulting file content.
 
 ```bash
 # should discover installed brew packages for the example
-mkdir -p .tmp/out
+mkdir -p .tmp
 brewgen --package-type brew --brewfile .tmp/discovery.Brewfile --force > .tmp/discovery.log 2>&1
 grep -E '^brew "' .tmp/discovery.Brewfile | cut -d'"' -f2 > .tmp/formulae
 sed -n '1p' .tmp/formulae > .tmp/exclude-name
@@ -18,6 +18,7 @@ test -s .tmp/include-name
 
 # should generate a filtered brew only Brewfile
 exclude_name="$(cat .tmp/exclude-name)"
+test ! -e .tmp/out
 BREWGEN_PACKAGE_TYPES=brew \
 BREWGEN_EXCLUDE="$exclude_name" \
 BREWGEN_BREWFILE=.tmp/out/Brewfile.generated \

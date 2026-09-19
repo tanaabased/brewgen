@@ -562,8 +562,11 @@ generate_brewfile() {
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
+    --brewfile= | --package-type= | --exclude=)
+      abort "${1%%=*} requires a value."
+      ;;
     --brewfile)
-      if [[ $# -lt 2 ]]; then
+      if [[ $# -lt 2 || -z "$2" || "$2" == -* ]]; then
         abort "--brewfile requires a value."
       fi
       BREWFILE="$2"
@@ -574,7 +577,7 @@ while [[ $# -gt 0 ]]; do
       shift
       ;;
     --package-type)
-      if [[ $# -lt 2 ]]; then
+      if [[ $# -lt 2 || -z "$2" || "$2" == -* ]]; then
         abort "--package-type requires a value."
       fi
       append_array_value PACKAGE_TYPES "$2"
@@ -585,7 +588,7 @@ while [[ $# -gt 0 ]]; do
       shift
       ;;
     --exclude)
-      if [[ $# -lt 2 ]]; then
+      if [[ $# -lt 2 || -z "$2" || "$2" == -* ]]; then
         abort "--exclude requires a value."
       fi
       append_array_value EXCLUDES "$2"
