@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@lando/leia": "^1.0.0-beta.4",
+    "@lando/leia": "^2.0.0",
     "eslint": "^10.0.3",
     "eslint-config-prettier": "^10.1.1",
     "globals": "^17.4.0",
@@ -28,6 +28,7 @@
   },
   "scripts": {
     "build": "bun ./scripts/build-dist.js",
+    "leia": "bun ./node_modules/.bin/leia",
     "lint:eslint": "eslint .",
     "lint:shellcheck": "shellcheck -s bash brewgen.sh",
     "format:check": "prettier --check .",

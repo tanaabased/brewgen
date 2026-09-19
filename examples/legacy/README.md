@@ -1,4 +1,4 @@
-# Brewgen Legacy Environment Compatibility Example
+# Legacy Example
 
 This scenario preserves transition support for the former `TANAAB_*` environment namespace. New
 callers use `BREWGEN_*`; legacy names remain an implementation compatibility path, not the public
@@ -7,8 +7,8 @@ contract.
 ## Setup
 
 ```bash
-# should prepare the scenario scratch directory
-mkdir -p .tmp
+# should have prepared brewgen on PATH
+command -v brewgen >/dev/null
 ```
 
 ## Testing
@@ -23,9 +23,11 @@ BREWGEN_BREWFILE=.tmp/from-brewgen TANAAB_BREWFILE=.tmp/from-legacy \
 if BREWGEN_BREWFILE=.tmp/from-brewgen TANAAB_BREWFILE=.tmp/from-legacy \
   brewgen --help | grep -F -- '.tmp/from-legacy'; then exit 1; fi
 
-# should retain legacy package-type and exclude defaults
+# should retain legacy package-type defaults
 TANAAB_PACKAGE_TYPES=brew TANAAB_EXCLUDE=codex \
   brewgen --help | grep -F -- '[default: brew]'
+
+# should retain legacy exclude defaults
 TANAAB_PACKAGE_TYPES=brew TANAAB_EXCLUDE=codex \
   brewgen --help | grep -F -- '[default: codex]'
 ```
