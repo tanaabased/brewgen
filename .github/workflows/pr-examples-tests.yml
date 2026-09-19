@@ -51,4 +51,4 @@ jobs:
           TMPDIR: ${{ github.workspace }}/examples/${{ matrix.example }}/.tmp
         run: |
           mkdir -p "$TMPDIR"
-          bun run leia "examples/${{ matrix.example }}/README.md" --stdin
+          bun run leia "examples/${{ matrix.example }}/README.md" --no-stdin
