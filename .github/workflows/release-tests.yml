@@ -40,6 +40,7 @@ jobs:
           actual="$(bash ./dist/brewgen.sh --version)"
           printf 'actual=%s\n' "$actual"
           test "$actual" = "${{ env.STAMPED_VERSION }}"
+          test -s ./dist/llms.txt
 
       - name: Validate repository publication
         uses: tanaabased/actions/publish-repo@v1
