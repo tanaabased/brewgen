@@ -19,9 +19,7 @@ jobs:
           fetch-depth: 0
 
       - name: Install Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version-file: .bun-version
+        uses: tanaabased/actions/setup-bun@v1
 
       - name: Install dependencies
         run: bun install --frozen-lockfile --ignore-scripts
@@ -42,3 +40,16 @@ jobs:
           actual="$(bash ./dist/brewgen.sh --version)"
           printf 'actual=%s\n' "$actual"
           test "$actual" = "${{ env.STAMPED_VERSION }}"
+
+      - name: Validate repository publication
+        uses: tanaabased/actions/publish-repo@v1
+        with:
+          dry-run: true
+          version: ${{ env.STAMPED_VERSION }}
+          release-date: 2026-09-19T00:00:00Z
+          release-url: https://example.invalid/releases/test
+          commands: |
+            bun install --frozen-lockfile --ignore-scripts
+            bun run lint
+            bun run build
+            version-injector dist/brewgen.sh --style sh --version "${{ env.STAMPED_VERSION }}"
