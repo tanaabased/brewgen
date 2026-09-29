@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "brewgen",
+      "name": "@tanaab/brewgen",
       "devDependencies": {
         "@eslint/js": "^10.0.1",
         "@lando/leia": "^2.0.0",
